@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>美美哒雪</title>
+		<style type="text/css">
+			*{padding: 0;margin: 0;}
+			body{
+				background-color: #fff;
+				color: #555;
+				font-family: 'Avenir Next','Lantingheu SC';
+				font-size: 14px;
+				-webkit-font-smoothing: antialiased;
+				-moz-font-smoothing: antialiased;
+			
+			}
+			.wrap{
+				width: 100%;
+				height: 600px;
+				position: absolute;
+				top: 50%;
+				margin-top: -300px;
+				background-color: #333;
+				overflow: hidden;
+				
+				-webkit-perspective: 800px;
+				-moz-perspective: 800px;
+				
+				/*3D效果*/
+			}
+			.photo{
+				width:260px;
+				height:320px;
+				position: absolute;
+				z-index: 1;
+				box-shadow: 0 0 1px rgba(0,0,0,.01);
+				 -webkit-transition:all .6s;
+				 -moz-transition:all .6s;
+				
+			}
+			
+			.photo .side{
+				width:100%;
+				height: 100%;
+				background-color: #eee;
+				position: absolute;
+				top: 0;
+				right: 0;
+				padding: 20px;
+				
+				box-sizing: border-box;
+			}
+			
+			.photo .side-front{}
+			.photo .side-front .image{
+				width: 100%;
+				height: 250px;
+				line-height: 250px;
+				overflow: hidden;
+			}
+			.photo .side-front .image img{
+				width: 100%;
+			}
+			.photo .side-front .caption{
+				text-align: center;
+				font-size: 16px;
+				line-height: 50px;
+			}
+			.photo .side-back{}
+			.photo .side-back .desc{
+				color: #666;
+				font-size: 14px;
+				line-height: 1.5em;
+			}
+			
+			/*当前选中的海报样式*/
+			
+			.photo_center{
+				/*width:260px;
+				height:320px;
+				*/
+				left:50%;
+				top: 50%;
+				margin: -160px 0 0 -130px;
+				z-index: 999;
+			}
+			.photo-wrap{
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				
+				-webkit-transform-style: preserve-3d;
+				-webkit-transition: all .6s;
+				
+				-moz-transform-style: preserve-3d;
+				-moz-transition: all .6s;
+			}
+			.photo-wrap .side-front{
+				-webkit-transform: rotateY(0deg);
+				-moz-transform: rotateY(0deg);
+				
+			}
+			.photo-wrap .side-back{
+				-webkit-transform: rotateY(180deg);
+				-moz-transform: rotateY(180deg);
+				
+				
+			}
+			.photo-wrap .side{
+				-webkit-backface-visibility: hidden;
+				-moz-backface-visibility: hidden;
+				
+			}
+			
+			/*.photo_front .photo-wrap{
+				-webkit-transform: rotateY(0deg);
+				-moz-transform: rotateY(0deg);
+				
+			}
+			.photo_back .photo-wrap{
+				-webkit-transform: rotateY(180deg);
+				-moz-transform: rotateY(180deg);
+				
+			}*/
+			
+			.nav{
+				width:80%;
+				height:30px;
+				line-height:30px;
+				position: absolute;
+				left:10%;
+				bottom:20px;
+				z-index: 999;
+				text-align: center;
+			}
+			@font-face {
+				font-family:'icons';
+				src: url('icons.woff') format('woff');
+				font-weight: normal;
+				font-size: normal;
+			}
+			.nav .i{
+				width: 30px;
+				height: 30px;
+				display: inline-block;
+				cursor: pointer;
+				background-color: #aaa;
+				text-align: center;
+				border-radius: 50%;
+				
+				-webkit-transform: scale(.48);
+				-webkit-transition: all 0.8s;
+				
+				-moz-transform: scale(.48);
+				-moz-transition: all 0.8s;
+			}
+			.nav .i:after{
+				content: "\e600";
+				font-family: 'icons';
+				font-size: 80%;
+				display: inline-block;
+				line-height: 30px;
+				text-align: center;
+				color:#fff;
+				opacity: 0;
+			}
+			.nav .i_current{
+				-webkit-transform: scale(1);
+				-moz-transform: scale(1);
+				
+				
+				
+			}
+			.nav .i_current:after{
+				opacity: 1;
+			}
+			
+			.nav .i_back{
+				-webkit-transform: rotateY(-180deg);
+				-moz-transform: rotateY(-180deg);
+				
+				background-color: #555;
+			}
+			
+			.photo{
+				left:50%;
+				top:50%;
+				margin: -160px 0 0 -130px;
+			}
+			.photo-wrap{
+				-webkit-transform-origin: 0% 50%;
+				-moz-transform-origin: 0% 50%;
+				
+				
+			}
+			.photo_front .photo-wrap{
+				-webkit-transform:translate(0px,0px) rotateY(0deg);
+				-moz-transform:translate(0px,0px) rotateY(0deg);
+				
+			}
+			.photo_back .photo-wrap{
+				-webkit-transform:translate(260px,0px) rotateY(180deg);
+				-moz-transform:translate(260px,0px) rotateY(180deg);
+				
+			}
+			
+		</style>
+		
+	</head>
+	<body onselectstart="return false">
+		<embed src="自己的自己.mp3" hidden=ture> 
+		<div class="wrap" id="wrap">
+			
+			
+			<div class="photo  photo_front" onclick="turn(this)" id="photo_{{index}}">
+				<div class="photo-wrap">
+                <!-- 负责翻转 -->
+					<div class="side side-front">
+						<p class="image"><img src="img/{{img}}"/></p>
+						<!--<p class="image"><img src="img/xue.jpg"/></p>-->
+						
+						<p class="caption">{{caption}}</p>
+					</div>
+					<div class="side side-back" >
+						<p class="desc">{{desc}}</p>
+					</div>
+				</div>
+			
+			</div>
+			
+		</div>
+		<script type="text/javascript" src="js/data.js">
+			
+		</script>
+		
+		
+		<script type="text/javascript">
+			
+			function turn (elem){
+				//翻面控制
+				var cls =elem.className;
+				var n=elem.id.split('_')[1];
+				
+				if(!/photo_center/.test(cls)){
+					return rsort(n);
+				}
+				if(/photo_front/.test(cls)){
+					cls=cls.replace(/photo_front/,'photo_back');
+					g('#nav_'+n).className+=' i_back ';
+				}else{
+					cls=cls.replace(/photo_back/,'photo_front');
+					g('#nav_'+n).className=g('#nav_'+n).className.replace(/\s*i_back\s*/,' ');
+				}
+				return elem.className=cls;
+			}
+			var data=data;
+			function g(selector){
+				var method=selector.substr(0,1)=='.' ? 'getElementsByClassName' : 'getElementById';
+				return document [method](selector.substr(1));
+			}
+			
+			
+			function addPhotos(){
+				var template=g('#wrap').innerHTML;
+				var html=[];
+				var nav=[];
+				
+				for(s in data){
+					var _html=template.replace('{{index}}',s)
+					                  .replace('{{img}}',data[s].img)
+					                  .replace('{{caption}}',data[s].caption)
+					                  .replace('{{desc}}',data[s].desc);
+					html.push(_html);
+					
+					nav.push('<span id="nav_'+s+'" onclick="turn( g(\'#photo_'+s+'\') )" class="i">&nbsp;</span>');
+					
+				}
+				html.push('<div class="nav">'+nav.join('')+'</div>')
+				
+				g('#wrap').innerHTML=html.join('');
+				rsort(random([0,data.length-1]));
+				
+			}
+			addPhotos();
+			//随机生成一个值 
+			function random(range){
+				var max=Math.max(range[0],range[1]);
+				var min =Math.min(range[0],range[1]);
+				
+				var diff=max-min; //差值
+				var number=Math.round(Math.random()*diff+min);
+				
+				return number;
+				
+			}
+			//排序海报
+			function rsort(n){
+				var _photo=g('.photo');
+				var photos=[];
+				for(s=0;s<_photo.length;s++){
+					_photo[s].className=_photo[s].className.replace(/s*photo_center\s*/,' ')
+					_photo[s].className=_photo[s].className.replace(/s*photo_front\s*/,' ')
+					_photo[s].className=_photo[s].className.replace(/s*photo_back\s*/,' ')
+					_photo[s].className+=' photo_front ';
+					
+					_photo[s].style.left='';
+					_photo[s].style.top='';
+					_photo[s].style['transform']=_photo[s].style['-webkit-transform']='rotate(360deg) scale(1.3)';
+					
+					
+					photos.push(_photo[s]);
+				}
+				
+				var photo_center=g('#photo_'+n);
+				
+				photo_center.className+=' photo_center ';
+				photo_center=photos.splice(n,1)[0];
+				
+				//分左右两部分
+				var photos_left=photos.splice(0,Math.ceil(photos.length/2));
+				var photos_right=photos;
+				
+				var ranges=range();
+				
+				for(s in photos_left){
+					var photo=photos_left[s];
+					photo.style.left=random(ranges.left.x)+'px';
+					photo.style.top=random(ranges.left.y)+'px';
+					
+					photo.style['transform']=photo.style['-webkit-transform']='rotate('+random([-120,120])+'deg) scale(1)';
+				}
+				for(s in photos_right){
+					var photo=photos_right[s];
+					
+					photo.style.left=random(ranges.right.x)+'px';
+					photo.style.top=random(ranges.right.y)+'px';
+					photo.style['transform']=photo.style['-webkit-transform']='rotate('+random([-120,120])+'deg) scale(1)';
+					
+				}
+				
+				var navs=g('.i');
+				for(var s=0;s<navs.length;s++){
+					navs[s].className=navs[s].className.replace(/\s*_current\s*/,' ');
+					navs[s].className=navs[s].className.replace(/\s*_back\s*/,' ');
+					
+				}
+				
+				g('#nav_'+n).className+=' i_current ';
+			}
+			
+			
+			//计算左右分区范围
+			function range(){
+				var range={left:{x:[],y:[]},right:{x:[],y:[]}};
+				var wrap={
+					w:g('#wrap').clientWidth,
+					h:g('#wrap').clientHeight
+				}
+				var photo={
+					w:g('.photo')[0].clientWidth,
+					h:g('.photo')[0].clientHeight
+				}
+				range.wrap=wrap;
+				range.photo=photo;
+				
+				range.left.x=[0-photo.w,(wrap.w/2) - photo.w/2];
+				range.left.y=[0-photo.h,wrap.h];
+				
+				range.right.x=[(wrap.w/2) + photo.w/2,wrap.w+photo.w];
+				range.right.y=range.left.y;
+				return range;
+			}
+		</script>
+		
+		
+	</body>
+</html>
